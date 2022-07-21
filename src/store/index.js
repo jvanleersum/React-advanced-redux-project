@@ -1,7 +1,6 @@
 import { configureStore, createSlice } from "@reduxjs/toolkit";
-import { notInitialized } from "react-redux/es/utils/useSyncExternalStore";
 
-const initialCartState = { hasItem: false, cartItem: {titl: "", price: 0, total: 0, quantity:0}, showCart: true };
+const initialCartState = { cartItems: [], totalQuantity: 0, hasItems:false, showCart: false };
 
 const cartSlice = createSlice({
   name: "cart",
@@ -11,24 +10,28 @@ const cartSlice = createSlice({
       state.showCart = !state.showCart;
     },
     addItem(state, actions) {
-      const item = actions.payload;
-      if (state.hasItem) {
-        state.cartItem.quantity += 1;
-        state.cartItem.total += item.price
+      const newItem = actions.payload;
+      const existingItem = state.cartItems.find(item => item.id === newItem.id)
+      if (existingItem) {
+        existingItem.quantity ++;
+        existingItem.total += newItem.price
       } else {
-        state.cartItem = item;
-        state.hasItem = true;
-      }
-      ;
+        state.cartItems.push(newItem);
+      };
+      state.totalQuantity ++;
+      state.hasItems = true;
     },
-    removeItem(state) {
-      if (state.cartItem.quantity > 1) {
-      state.cartItem.quantity -= 1
-      state.cartItem.total -= state.cartItem.price
+    removeItem(state, action) {
+      const id = action.payload
+      const existingItem = state.cartItems.find(item => item.id === id)
+      if (existingItem.quantity === 1) {
+        state.cartItems = state.cartItems.filter(item => item.id !== id)
       } else {
-        state.cartItem = {title: "", price: 0, total: 0, quantity:0}
-        state.hasItem = false
-      }
+        existingItem.quantity --;
+        existingItem.total -= existingItem.price
+      };
+      state.totalQuantity --;
+      state.hasItems = state.totalQuantity > 0;
     }
   },
 });

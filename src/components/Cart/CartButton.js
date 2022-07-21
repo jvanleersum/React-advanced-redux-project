@@ -3,7 +3,7 @@ import { cartActions } from '../../store/index';
 import classes from './CartButton.module.css';
 
 const CartButton = (props) => {
-  const cartItem = useSelector(state => state.cartItem);
+  const cartQuantity = useSelector(state => state.totalQuantity);
   const dispatch = useDispatch();
 
   const toggleCartHandler = () => {
@@ -13,7 +13,7 @@ const CartButton = (props) => {
   return (
     <button className={classes.button} onClick={toggleCartHandler}>
       <span>My Cart</span>
-      <span className={classes.badge}>{cartItem.quantity}</span>
+      <span className={classes.badge}>{cartQuantity}</span>
     </button>
   );
 };
