@@ -4,17 +4,18 @@ import classes from './Cart.module.css';
 import CartItem from './CartItem';
 
 const Cart = (props) => {
-  const cartItem = useSelector(state => state.cartItem);
-  const hasItem = useSelector(state => state.hasItem)
+  const cartItems = useSelector(state => state.cartItems);
+  const hasItems = useSelector(state => state.hasItems)
 
+  
   return (
     <Card className={classes.cart}>
       <h2>Your Shopping Cart</h2>
       <ul>
-        {hasItem && <CartItem
+        {hasItems && cartItems.map(cartItem => <CartItem
           item={cartItem}
-        />}
-        {!hasItem && <p>No items in the cart.</p>}
+        />)}
+        {!hasItems && <p>No items in the cart.</p>}
       </ul>
     </Card>
   );
